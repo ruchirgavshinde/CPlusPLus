@@ -1,0 +1,31 @@
+#include<iostream>
+#include<conio.h>
+using namespace std;
+int main()
+{
+int arr[100];
+int i,n,j,pos,temp;
+cout<<"enter the number of elements"<<endl;
+cin>>n;
+cout<<endl;
+cout<<"enter the elements"<<endl;
+for(i=0;i<n;i++)
+{
+cin>>arr[i];
+}
+cout<<"The sorted elements are:"<<endl;
+for(i=0;i<n;i++)
+{
+	for(j=i+1;j<n;j++)
+	{
+		if(arr[j]<arr[i])
+		{
+		temp=arr[i];
+		arr[i]=arr[j];
+		arr[j]=temp;
+		}
+	}
+cout<<"  "<<arr[i];
+}
+return 0;
+}
