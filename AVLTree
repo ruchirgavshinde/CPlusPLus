@@ -1,0 +1,271 @@
+#include<iostream>
+#include<stack>
+#include<vector>
+#include<queue>
+
+using namespace std;
+struct avlnode
+{
+    int data,bf;
+    avlnode*left,*right;
+}*root=NULL;
+avlnode *a=new avlnode;
+void postorder(avlnode*r)
+{
+    if(r!=NULL)
+    {
+        postorder(r->left);
+        postorder(r->right);
+        cout<<r->data<<"->";
+    }
+
+}
+void preorder(avlnode*r)
+{
+    if(r!=NULL)
+    {
+        cout<<r->data<<"->";
+        preorder(r->left);
+        preorder(r->right);
+
+    }
+
+}
+queue<avlnode*> level;
+void levelorder(avlnode*r)
+{
+  level.push(r);
+
+  while(!level.empty())
+  {
+      avlnode*temp=level.front();
+
+
+      cout<<temp->data<<"->";
+      if(temp->left!=NULL)
+      {
+      level.push(temp->left);
+      }
+      if(temp->right!=NULL)
+        level.push(temp->right);
+      level.pop();
+  }
+}
+int heigth(avlnode*r)
+{
+    if(r==NULL)
+        return 0;
+    else
+    {
+        int lh=heigth(r->left);
+        int rh=heigth(r->right);
+        if(lh<rh)
+            return rh+1;
+        else
+            return lh+1;
+    }
+}
+void llrotation(avlnode*x,avlnode*y,avlnode*z)
+{
+    avlnode*temp=y->right;
+    y->right=x;
+    x->left=temp;
+    if(z->left==x)
+        z->left=y;
+    else
+        z->right=y;
+
+}
+void rrrotation(avlnode*x,avlnode*y,avlnode*z)
+{
+    avlnode*temp=y->left;
+    y->left=x;
+    x->right=temp;
+    if(z->left==x)
+        z->left=y;
+    else
+        z->right=y;
+
+}
+void lrrotation(avlnode*x,avlnode*y,avlnode*z,avlnode*w)
+{
+    rrrotation(y,w,x);
+    llrotation(x,w,z);
+}
+void rlrotation(avlnode*x,avlnode*y,avlnode*z,avlnode*w)
+{
+    llrotation(y,w,x);
+    rrrotation(x,w,z);
+}
+avlnode* insertin(avlnode*r,int x)
+{
+    avlnode *newnode=new avlnode;
+    newnode->data=x;
+    newnode->bf=0;
+    newnode->left=NULL;
+    newnode->right=NULL;
+    if(r==NULL)
+    {
+       r=newnode;
+
+    }
+    else
+    {
+    vector<avlnode*> v;
+
+    avlnode* curr=r,*p=NULL;
+    while(curr!=NULL)
+    {
+        p=curr;
+        v.push_back(p);
+        if(curr->data<x)
+            curr=curr->right;
+        else
+            curr=curr->left;
+    }
+    if(x<p->data)
+        p->left=newnode;
+    else
+        p->right=newnode;
+
+//cout<<x<<" ->";
+
+
+ for(vector<avlnode*>::iterator i=v.begin();i!=v.end();i++)
+{
+
+    int hl=heigth((*i)->left);
+    int hr=heigth((*i)->right);
+    (*i)->bf=hl-hr;
+}
+ for(vector<avlnode*>::iterator i=v.end()-1;i>=v.begin();i--)
+ {
+
+     if((*i)->bf>1)
+        {
+            if((*i)->bf>1)
+                {
+
+                    if(((*i)->data>x)&&((*(i+1))->data>x))
+                    {
+
+                        if(r==(*i))
+                        {
+                            llrotation(*i,*(i+1),a);
+                            r=*(i+1);
+                        }
+                        else
+                        {
+                            llrotation(*i,*(i+1),*(i-1));
+                        }
+                    }
+                    else if(((*i)->data>x)&&((*(i+1))->data<x))
+                    {
+                        avlnode*temp1=(*(i+1))->right;
+                        if(r==(*i))
+                        {
+
+                            lrrotation(*i,*(i+1),a,temp1);
+                            r=temp1;
+                        }
+                        else
+                        {
+
+                              lrrotation(*i,*(i+1),*(i-1),temp1);
+                        }
+                    }
+                }
+                break;
+        }
+                else if(((*i)->bf<-1))
+                 {
+                    if(((*i)->data<x)&&((*(i+1))->data<x))
+                    {
+                        if(r==(*i))
+                        {
+                            rrrotation(*i,*(i+1),a);
+                            r=*(i+1);
+                        }
+                        else
+                        {
+                            rrrotation(*i,*(i+1),*(i-1));
+                        }
+                    }
+                    else if(((*i)->data<x)&&((*(i+1))->data>x))
+                    {
+                        avlnode*temp1=(*(i+1))->left;
+                        if(r==(*i))
+                        {
+
+                            rlrotation(*i,*(i+1),a,temp1);
+                            r=temp1;
+                        }
+                        else
+                        {
+                            rlrotation(*i,*(i+1),*(i-1),temp1);
+                        }
+                    }
+                    break;
+                }
+
+
+ }
+
+ for(vector<avlnode*>::iterator i=v.begin();i!=v.end();i++)
+{
+    //cout<<(*i)->data<<"==";
+    int hl=heigth((*i)->left);
+    int hr=heigth((*i)->right);
+    (*i)->bf=hl-hr;
+    //cout<<(*i)->bf<<"   ";
+}
+
+//cout<<endl;
+
+}
+    return r;
+
+
+}
+
+void inorder(avlnode* r)
+{
+    if(r!=NULL)
+    {
+        inorder(r->left);
+        cout<<r->data<< "->";
+        inorder(r->right);
+    }
+}
+int main()
+{
+    root=insertin(root,19);
+    root=insertin(root,14);
+    root=insertin(root,42);
+     root=insertin(root,63);
+      root=insertin(root,30);
+      root=insertin(root,35);
+      root=insertin(root,70);
+      root=insertin(root,80);
+      root=insertin(root,12);
+      root=insertin(root,7);
+      root=insertin(root,9);
+      root=insertin(root,13);
+      root=insertin(root,11);
+
+      //root=insertin(root,14);
+     cout<<"Inorder==";
+     inorder(root);
+     cout<<endl<<endl<<endl;
+     cout<<"Postorder==";
+     postorder(root);
+     cout<<endl<<endl<<endl;
+     cout<<"Preorder==";
+     preorder(root);
+     cout<<endl<<endl<<endl;
+     cout<<"Levelorder==";
+     levelorder(root);
+     cout<<endl<<endl<<endl;
+
+     return 0;
+}
