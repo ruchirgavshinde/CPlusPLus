@@ -1,0 +1,15 @@
+a=input("Enter any combination of 0 and 1: ")
+flag=0
+check="010"
+if(len(a)==3):
+    if(a==check):
+        flag=0
+else:
+    for i in range(0,len(a)):
+        check+="0"
+if(check==a):
+    flag=0
+    print("valid")
+else:
+    flag=1
+    print("invalid")
