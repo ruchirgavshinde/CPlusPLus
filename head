@@ -1,0 +1,24 @@
+t=int(input())
+while(t):
+    n=int(input())
+    s=input()
+    y=0
+    n=0
+    i=0
+    for j in range(len(s)):
+        if(s[j]=='I'):
+            i=i+1
+            break
+        elif(s[j]=='N'):
+            n=n+1
+            break
+        elif(s[j]=='Y'):
+            y=y+1
+            break
+    t=t-1
+    if(i>y):
+        print('INDIAN')
+    elif(y>i):
+        print('NOT INDIAN')
+    elif(i==0 and y==0):
+        print('NOT SURE')
